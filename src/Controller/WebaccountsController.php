@@ -43,5 +43,14 @@ class WebaccountsController extends AppController {
 		$this->set("error","IDまたはパスワードが異なります");
 		$this->set("entity",$entity);
 	}
+
+	public function webList() {
+		if (!$this->request->session()->read('web_id')) {
+			$this->request->session()->destroy();
+			$this->redirect(["controller" => "webaccounts","action" => "index"]);
+		}
+		$webaccounts = $this->Webaccounts->find("all");
+		$this->set("webaccount_datas",$webaccounts);
+	}
 }
 ?>
