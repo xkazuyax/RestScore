@@ -198,5 +198,19 @@ class WebaccountsController extends AppController {
 			$this->redirect(["controller" => "Webaccounts","action" => "index"]);
 		}
 	}
+
+	public function delete($id = null) {
+		if (!$this->request->session()->read('web_id') || $id == null) {
+			$this->request->session()->destroy();
+			$this->redirect(["controller" => "Webaccounts","action" => "index"]);
+		}
+		try {
+			$entity = $this->Webaccounts->get($id);
+			$this->Webaccounts->delete($entity);
+		} catch(Exception $e) {
+			Log::write("debug",$e->getMessage());
+		}
+
+	}
 }
 ?>

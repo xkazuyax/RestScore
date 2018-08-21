@@ -8,7 +8,7 @@
 				<a class="btn btn-info" href="<?=$this->Url->build('/Webaccounts/update/'.$id);?>">編集</a>
 			</div>
 			<div class="col-sm-2">
-				<a class="btn btn-danger" href="<?=$this->Url->build('Webaccounts/delete/'.$id);?>">削除</a>
+				<button class="btn btn-danger" onClick="del()">削除</button>
 			</div>
 		</div>
 	</div>
@@ -62,5 +62,34 @@
 		</table>
 		</div>
 		</div>
+		<div class="row">
+		<div class="col-sm-12">
+			<div class="modal fade" id="delete">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title text-center">Webアカウント削除確認</h4>
+						</div>
+						<div class="modal-body">
+							<p class="text-center">「アカウント名:<?=h($webaccount[0]['name']);?>」</p>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-info  float-left mr-5" type="button" data-dismiss="modal" onClick="doOK()">削除</button>
+							<button class="btn btn-info  ml-5" type="button" data-dismiss="modal">キャンセル</</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	</div>
 </div>
+<script>
+		function del() {
+			$("#delete").modal();
+		}
+
+		function doOK() {
+			window.location.href="<?=$this->Url->build('/Webaccounts/delete/'.$id);?>";
+		}
+ 	</script>
