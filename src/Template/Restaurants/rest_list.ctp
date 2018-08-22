@@ -20,16 +20,17 @@
 							<th scope="col">分類</th>
 							<th scope="col">場所</th>
 							<th scope="col">訪問者</th>
+							<th scope="col">スコア</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<?php
-							$restaurant_datas = $restaurants->toArray();
-							foreach($restaurant_datas as $restaurant) {
-							?>
-								<td scope="row"><?=h($restaurant_data->rest_name);?></td>
-								<td scope="row"><img src="http://160.16.233.165/img/<?=$restaurant_data->appear_image;?>" alt="外観"></td>
+						<?php
+						$restaurant_datas = $restaurants->toArray();
+						foreach($restaurant_datas as $restaurant_data) {
+						?>
+							<tr>
+								<td scope="row"><a href="<?=$this->Url->build('/Restaurants/detail/'.$restaurant_data->id)?>"><?=h($restaurant_data->rest_name)?></a></td>
+								<td scope="row"><img src="http://160.16.233.165/img/<?=$restaurant_data->appear_image;?>" alt="外観" width="100" height="100"></td>
 								<td scope="row">
 									<?php
 									switch($restaurant_data->type) {
@@ -61,11 +62,20 @@
 									?>
 								</td>
 								<td scope="row"><?=h($restaurant_data->place);?></td>
-								<td scope="row"><?=h($restaurant_data->name);?></td>
-							<?php
-							}
-							?>
-						</tr>
+								<td scope="row"><?=h($restaurant_data["webaccount"]["name"]);?></td>
+								<td scope="row">
+								<?php
+								for ($i=1;$i<=$restaurant_data->score;$i++) {
+								?>
+									<img src="http://160.16.233.165/img/star.jpg" alt="★" width="30" height="30">
+								<?php
+								}
+								?>
+								</td>
+							</tr>
+						<?php
+						}
+						?>
 					</tbody>
 				</table>
 			</div>

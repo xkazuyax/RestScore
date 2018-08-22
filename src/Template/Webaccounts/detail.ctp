@@ -14,6 +14,17 @@
 	</div>
 	<div class="card-body">
 		<div class="row">
+		<div class="col-sm-12">
+		<?php
+		if($error_flag) {
+		?>
+			<h4 class="text-danger text-center">エラー：自身のアカウントは削除できません</h3>
+		<?php
+		}
+		?>
+		</div>
+		</div>
+		<div class="row">
 		<div class="col-sm-3"></div>
 		<div class="col-sm-6">
 		<table class="table table-bordered">
@@ -90,6 +101,17 @@
 		}
 
 		function doOK() {
+			//自身のアカウントは削除不可
+			<?php
+
+			if ((int)$id == $login_account_id) {
+			?>
+			    window.location.href="<?=$this->Url->build('/Webaccounts/detail/'.$id.'/on');?>";
+			    exit();
+			<?php
+			}
+			?>
 			window.location.href="<?=$this->Url->build('/Webaccounts/delete/'.$id);?>";
+			exit();
 		}
  	</script>

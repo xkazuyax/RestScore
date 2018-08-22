@@ -13,8 +13,8 @@
 
 		public function validationDefault(Validator $validator) {
 			$validator->maxLength("name",20,"20文字で入力してください");
-			$validator->maxLength("appear_image",40,"40文字以内で入力してください");
-			$validator->maxLenght("menu_image",40,"40文字以内で入力してください");
+			$validator->maxlength("appear_image",40,"40文字以内で入力してください");
+			$validator->maxlength("menu_image",40,"40文字以内で入力してください");
 			$validator->maxLength("place",20,"20文字以内で入力してください");
 			$validator->numeric("latitude");
 			$validator->numeric("longitude");

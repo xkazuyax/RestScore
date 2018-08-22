@@ -56,7 +56,7 @@ class WebaccountsController extends AppController {
 		$this->set("webaccount_datas",$webaccounts);
 	}
 
-	public function detail($id = null) {
+	public function detail($id = null, $error_flag = null) {
 		if (!$this->request->session()->read('web_id') || $id == null) {
 			$this->request->session()->destroy();
 			$this->redirect(["controller" => "webaccounts","action" => "index"]);
@@ -66,8 +66,11 @@ class WebaccountsController extends AppController {
 				"id" => $id
 			]
 		]);
+
+		$this->set("error_flag",$error_flag);
 		$this->set("webaccount_data",$webaccount_data);
 		$this->set("id",$id);
+		$this->set("login_account_id",$this->request->session()->read("web_id"));
 	}
 
 	public function add() {
@@ -206,11 +209,18 @@ class WebaccountsController extends AppController {
 		}
 		try {
 			$entity = $this->Webaccounts->get($id);
-			$this->Webaccounts->delete($entity);
+			if ($this->Webaccounts->delete($entity)) {
+			     $this->Webaccounts->unlink('/var/www/html/img/'.$entity->image_name);
+			}
 		} catch(Exception $e) {
 			Log::write("debug",$e->getMessage());
 		}
 
+	}
+
+	public function logout() {
+	   $this->request->session()->destroy();
+	   return $this->redirect(["controller" => "Webaccounts","action" => "index"]);
 	}
 }
 ?>
