@@ -29,6 +29,7 @@ body{
 <a href="<?=$this->Url->build('/Webaccounts/webList');?>" class="p-5 list-group-item list-group-item-action bg-dark text-light">Webアカウント管理</a>
 <a href="<?=$this->Url->build('/Chats/index');?>" class="p-5 list-group-item list-group-item-action bg-dark text-light">チャット</a>
 <a href="<?=$this->Url->build('/Restaurants/restList');?>" class="p-5 list-group-item list-group-item-action bg-dark text-light">グルメ評価</a>
+<a href="<?=$this->Url->build('/boards/boardList');?>" class="p-5 list-group-item list-group-item-action bg-dark text-light">掲示板</a>
 <a href="<?=$this->Url->build('/Webaccounts/logout');?>" class="p-5 list-group-item list-group-item-action bg-dark text-light">ログアウト</a>
 </div>
 </div>

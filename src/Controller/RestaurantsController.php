@@ -17,7 +17,7 @@ class RestaurantsController extends AppController {
 	public function restList() {
 		if (!$this->request->session()->read('web_id')) {
 			$this->request->session()->destroy();
-			return $this->redirect(["controller" => "Restaurants","action" => "index"]);
+			return $this->redirect(["controller" => "Webaccounts","action" => "index"]);
 		}
 
 		$restaurants = $this->Restaurants->find("all")->contain(['Webaccounts']);
