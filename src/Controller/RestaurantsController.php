@@ -191,4 +191,27 @@ class RestaurantsController extends AppController {
 	    }
 
 	}
+
+	public function getRestData() {
+	    $this->autoRender = false;
+	    if (!$this->request->session()->read('web_id')) {
+	        $this->request->session()->destroy();
+	        $this->redirect(["controller" => "Webaccounts","action" => "index"]);
+	    }
+
+	    $restaurant_datas = $this->Restaurants->find("all");
+	    $restaurant_datas = $restaurant_datas->toArray();
+
+	    //$data = array();
+
+	    foreach($restaurant_datas as $num => $restaurant_data) {
+	        $i = 0;
+	        $array_restData[$num][$i++] = $restaurant_data->rest_name;
+	        $array_restData[$num][$i++] = $restaurant_data->appear_image;
+	        $array_restData[$num][$i++] = $restaurant_data->latitude;
+	        $array_restData[$num][$i++] = $restaurant_data->longitude;
+	        //array_push($data,$array_restData);
+	    }
+	    echo json_encode($array_restData);
+	}
 }

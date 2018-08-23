@@ -3,11 +3,15 @@ namespace App\Controller;
 
 use \Exception;
 use Cake\Log\Log;
+use Cake\ORM\TableRegistry;
 
 class WebaccountsController extends AppController {
+    public $restaurants;
+
 	public function initialize() {
 		$this->autoRender = true;
 		$this->viewBuilder()->Layout('webaccounts');
+		$this->restaurants = tableRegistry::get("restaurants");
 	}
 
 	public function index() {
@@ -221,6 +225,37 @@ class WebaccountsController extends AppController {
 	public function logout() {
 	   $this->request->session()->destroy();
 	   return $this->redirect(["controller" => "Webaccounts","action" => "index"]);
+	}
+
+	public function getImage() {
+	    $this->autoRender = false;
+	    if (!$this->request->session()->read('web_id')) {
+	        $this->request->session()->destroy();
+	        $this->redirect(["controller" => "Webaccounts","action" => "index"]);
+	    }
+
+        $webaccount = $this->Webaccounts->find("all",[
+            "conditions" => [
+                "id" => $this->request->session()->read("web_id")
+            ]
+        ]);
+        $webaccount = $webaccount->toArray();
+
+        try {
+            $entity = $this->Webaccounts->get($this->request->session()->read("web_id"));
+            $entity->latitude = $this->request->data["y"];
+            $entity->longitude = $this->request->data["x"];
+            $entity->modified_date = time();
+        } catch (Exception $e) {
+            Log::write("debug",$e->getMessage());
+        }
+
+        //DBの位置情報更新
+        $this->Webaccounts->save($entity);
+
+        $data = array($webaccount[0]["image_name"]);
+        echo json_encode($data);
+
 	}
 }
 ?>
