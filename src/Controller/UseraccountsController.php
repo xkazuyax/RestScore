@@ -5,76 +5,63 @@ use \Exception;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
-class WebaccountsController extends AppController {
+class UseraccountsController extends AppController {
     public $restaurants;
 
 	public function initialize() {
 		$this->autoRender = true;
-		$this->viewBuilder()->Layout('webaccounts');
-		$this->restaurants = tableRegistry::get("restaurants");
-	}
-
-	public function index() {
-		$this->viewBuilder()->Layout(false);
-		$entity = $this->Webaccounts->newEntity();
-		$this->set("entity",$entity);
+		$this->viewBuilder()->Layout('useraccounts');
 	}
 
 	public function loginCheck() {
+	    $this->autoRender = false;
 		$this->viewBuilder()->Layout(false);
-		$entity = $this->Webaccounts->newEntity($this->request->data);
+		$entity = $this->Useraccounts->newEntity($this->request->data);
 		$error = "";
 		if ($this->request->isPost()) {
 			$login_id = $this->request->data['login_id'];
 			$pass = $this->request->data['pass'];
-			$webaccounts = $this->Webaccounts->find("all",[
+			$useraccounts = $this->Useraccounts->find("all",[
 				"conditions" => [
 					"login_id" => $login_id,
 					"password" => $pass
 				]
 			]);
-			if ($webaccounts->count() == 1) {
-				$webaccount = $webaccounts->toArray();
-				$web_id = $webaccount[0]["id"];
-				$web_name = $webaccount[0]["name"];
-				$web_type = $webaccount[0]["type"];
-				$this->request->session()->write(["web_id" => $web_id,
-					"web_name" => $web_name,
-					"web_role" => $web_type
-				]);
-				$this->redirect(["controller" => "webaccounts","action" => "webList"]);
+			if ($useraccounts->count() == 1) {
+				$useraccount = $useraccounts->toArray();
+				$user_id = $useraccount[0]["id"];
+				$user_name = $useraccount[0]["name"];
+
+				//Androidに応答を返す処理
 			} else {
 				$error = "IDまたはパスワードが異なります";
 			}
 		}
-		$this->set("error","IDまたはパスワードが異なります");
-		$this->set("entity",$entity);
+		//エラーを返す処理
+
 	}
 
-	public function webList() {
+	public function userList() {
 		if (!$this->request->session()->read('web_id')) {
 			$this->request->session()->destroy();
 			$this->redirect(["controller" => "webaccounts","action" => "index"]);
 		}
-		$webaccounts = $this->Webaccounts->find("all");
-		$this->set("webaccount_datas",$webaccounts);
+		$useraccounts = $this->Useraccounts->find("all");
+		$this->set("useraccount_datas",$useraccounts);
 	}
 
-	public function detail($id = null, $error_flag = null) {
+	public function detail($id = null) {
 		if (!$this->request->session()->read('web_id') || $id == null) {
 			$this->request->session()->destroy();
 			$this->redirect(["controller" => "webaccounts","action" => "index"]);
 		}
-		$webaccount_data = $this->Webaccounts->find("all",[
+		$useraccount_data = $this->Useraccounts->find("all",[
 			"conditions" => [
 				"id" => $id
 			]
 		]);
-
-		$this->set("error_flag",$error_flag);
-		$this->set("webaccount_data",$webaccount_data);
+		$this->set("useraccount_data",$useraccount_data);
 		$this->set("id",$id);
-		$this->set("login_account_id",$this->request->session()->read("web_id"));
 	}
 
 	public function add() {
@@ -83,7 +70,7 @@ class WebaccountsController extends AppController {
 			$this->redirect(["controller" => "webaccounts","action" => "index"]);
 		}
 
-		$entity = $this->Webaccounts->newEntity();
+		$entity = $this->Useraccounts->newEntity();
 		$this->set("entity",$entity);
 	}
 
@@ -94,7 +81,7 @@ class WebaccountsController extends AppController {
 			$this->redirect(["controller" => "webaccounts","action" => "index"]);
 		}
 		if ($this->request->isPost()) {
-			$entity = $this->Webaccounts->newEntity($this->request->data);
+			$entity = $this->Useraccounts->newEntity($this->request->data);
 			$entity->create_date = time();
 			$entity->modified_date = time();
 			$pass = $this->request->data["password"];
@@ -109,8 +96,8 @@ class WebaccountsController extends AppController {
 						$file_path ="/var/www/html/img/".$upload_file["name"];
 						if (move_uploaded_file($upload_file["tmp_name"],$file_path)) {
 							$entity->image_name = $upload_file["name"];
-							if ($this->Webaccounts->save($entity)) {
-								$this->redirect(["controller" => "webaccounts","action" => "addComplete"]);
+							if ($this->Useraccounts->save($entity)) {
+								$this->redirect(["controller" => "useraccounts","action" => "addComplete"]);
 							}
 						}
 					}
@@ -134,15 +121,15 @@ class WebaccountsController extends AppController {
 			$this->redirect(["controller" => "Webaccounts","action" => "index"]);
 		}
 
-		$webaccount_data = $this->Webaccounts->find("all",[
+		$useraccount_data = $this->Useraccounts->find("all",[
 			"conditions" => [
 				"id" => $id
 			]
 		]);
-		$this->set("webaccount_data",$webaccount_data);
+		$this->set("useraccount_data",$useraccount_data);
 		$this->set("id",$id);
 		try {
-		$this->set("entity",$this->Webaccounts->get($id));
+		$this->set("entity",$this->Useraccounts->get($id));
 		} catch(Exception $e) {
 			Logg::write("debug",$e->getMessage());
 		}
@@ -156,9 +143,9 @@ class WebaccountsController extends AppController {
 		}
 		$error = "";
 		if ($this->request->is('put')) {
-			$new_entity = $this->Webaccounts->newEntity($this->request->data);
+			$new_entity = $this->Useraccounts->newEntity($this->request->data);
 			try {
-				$entity = $this->Webaccounts->get($this->request->data['id']);
+				$entity = $this->Useraccounts->get($this->request->data['id']);
 			} catch(Exception $e) {
 				Logg:write("debug",$e->getMessage());
 			}
@@ -186,9 +173,9 @@ class WebaccountsController extends AppController {
 				$error = "パスワードが一致しません";
 			}
 			$entity->modified_date = time();
-			$this->Webaccounts->patchEntity($entity,$this->request->data);
-			if ($this->Webaccounts->save($entity)) {
-				$this->redirect(["controller" => "webaccounts","action" => "updateComplete"]);
+			$this->Useraccounts->patchEntity($entity,$this->request->data);
+			if ($this->Useraccounts->save($entity)) {
+				$this->redirect(["controller" => "Useraccounts","action" => "updateComplete"]);
 			}
 		} else {
 			$new_entity = $this->Form->newEntity();
@@ -212,8 +199,8 @@ class WebaccountsController extends AppController {
 			$this->redirect(["controller" => "Webaccounts","action" => "index"]);
 		}
 		try {
-			$entity = $this->Webaccounts->get($id);
-			if ($this->Webaccounts->delete($entity)) {
+			$entity = $this->Useraccounts->get($id);
+			if ($this->Useraccounts->delete($entity)) {
 			     unlink('/var/www/html/img/'.$entity->image_name);
 			}
 		} catch(Exception $e) {
